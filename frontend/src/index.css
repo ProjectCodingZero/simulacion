@@ -1,0 +1,166 @@
+@import "tailwindcss";
+@theme {
+  --color-uva-100: oklch(0.92 0.04 300);
+  --color-uva-200: oklch(0.82 0.1 300);
+  --color-uva-300: oklch(0.68 0.18 302);
+  --color-uva-400: oklch(0.54 0.22 305);
+  --color-uva-500: oklch(0.42 0.2 305);
+  --color-uva-600: oklch(0.28 0.14 308);
+  --color-uva-700: oklch(0.18 0.08 310);
+  --color-jade-100: oklch(0.99 0.01 150);
+  --color-jade-200: oklch(0.95 0.05 145.5);
+  --color-jade-300: oklch(0.88 0.12 148.2);
+  --color-jade-400: oklch(0.76 0.18 152.8);
+  --color-jade-500: oklch(0.58 0.15 155.1);
+  --color-jade-600: oklch(0.32 0.09 158.4);
+  --color-jade-700: oklch(0.18 0.05 160);
+}
+@layer utilities {
+  .center {
+    @apply flex justify-center items-center h-screen;
+  }
+}
+.app-container {
+  @apply bg-uva-400;
+  width: 1000px;
+
+  display: flex;
+  height: 100vh; /* Ocupa el 100% del alto de la pantalla */
+  width: 100vw; /* Ocupa el 100% del ancho */
+}
+:root {
+  --text: #6b6375;
+  --text-h: #08060d;
+  @apply bg-blue-700;
+  @apply accent-uva-100;
+  --accent-border: rgba(170, 59, 255, 0.5);
+  --social-bg: rgba(244, 243, 236, 0.5);
+  --shadow:
+    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+
+  --sans: system-ui, "Segoe UI", Roboto, sans-serif;
+  --heading: system-ui, "Segoe UI", Roboto, sans-serif;
+  --mono: ui-monospace, Consolas, monospace;
+
+  font: 18px/145% var(--sans);
+  letter-spacing: 0.18px;
+  color-scheme: light dark;
+  color: var(--text);
+  background: var(--bg);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  @media (max-width: 1024px) {
+    font-size: 16px;
+  }
+}
+@import "tailwindcss";
+@layer buttons {
+  .btn {
+    @apply px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500;
+    @apply active:scale-95 text-white font-medium rounded-lg shadow-md;
+    @apply hover:shadow-indigo-500/20 transition-all duration-200 ease-in-out;
+  }
+  .btn-primary {
+    @apply bg-amber-500 text-white hover:bg-amber-600 shadow-indigo-100 hover:text-black;
+  }
+  .btn-secondary {
+    @apply text-white  bg-blue-600 shadow-slate-100;
+    @apply hover:bg-emerald-400 hover:text-black hover:shadow-amber-500;
+  }
+  .btn-danger {
+    @apply bg-red-600 text-white hover:bg-red-700 shadow-red-100;
+  }
+  .btn-ghost {
+    @apply bg-transparent text-slate-500 hover:bg-slate-50 shadow-none;
+  }
+}
+@layer navbar {
+  .navbar {
+    @apply table-row;
+  }
+  .navbar-brand {
+    @apply text-xl font-bold;
+  }
+  .navbar-menu {
+    @apply px-5 py-2.5;
+    @apply active:scale-95 text-white font-medium rounded-lg shadow-md;
+    @apply hover:shadow-indigo-500/20 transition-all duration-200 ease-in-out;
+    @apply text-9xl;
+  }
+  .navbar-links {
+    @apply hover:bg-amber-500 hover:text-black;
+    @apply bg-jade-300 ring-3 ring-black;
+    @apply text-uva-500 hover:text-blue-700 hover:bg-emerald-600 rounded-lg shadow-md ring-2;
+    @apply ring-0;
+  }
+  .navbar-active {
+    @apply rounded-lg ring-2 ring-black bg-amber-400;
+    @apply text-red-800 hover:text-amber-500 hover:bg-amber-900;
+    @apply hover:ring-1;
+    @apply focus:bg-black focus:text-white;
+    @apply active:bg-black active:text-white;
+  }
+}
+
+#root {
+  @apply bg-amber-200;
+  width: 1126px;
+  max-width: 100%;
+  margin: 0 auto;
+  text-align: center;
+  border-inline: 1px solid var(--border);
+  min-height: 100svh;
+  display: flex;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+h1,
+h2 {
+  font-family: var(--heading);
+  font-weight: 500;
+  color: var(--text-h);
+}
+
+h1 {
+  font-size: 56px;
+  letter-spacing: -1.68px;
+  margin: 32px 0;
+  @media (max-width: 1024px) {
+    font-size: 36px;
+    margin: 20px 0;
+  }
+}
+h2 {
+  font-size: 24px;
+  line-height: 118%;
+  letter-spacing: -0.24px;
+  margin: 0 0 8px;
+  @media (max-width: 1024px) {
+    font-size: 20px;
+  }
+}
+p {
+  margin: 0;
+}
+
+code,
+.counter {
+  font-family: var(--mono);
+  display: inline-flex;
+  border-radius: 4px;
+  color: var(--text-h);
+}
+
+code {
+  font-size: 15px;
+  line-height: 135%;
+  padding: 4px 8px;
+  background: var(--code-bg);
+}
