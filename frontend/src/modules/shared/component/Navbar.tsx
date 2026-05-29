@@ -1,38 +1,60 @@
 import { NavLink } from "react-router-dom";
 
 function Navbar() {
-  const classNameDefault = "px-5 py-1.5 ";
   return (
-    <nav className="navbar place-content-center flex flex-col
-      font-medium rounded-lg shadow-md
-      hover:shadow-indigo-500/20 transition-all duration-200 ease-in-out">
-      <ul className="text-lg opacity-70 group-hover:opacity-100 gap-1.5 p-5">
-        <li
-          className={`${classNameDefault}  m-4 transition-opacity transition-all duration-100 ease-in-out active:scale-90`}
-        >
-          <NavLink
-            to="/"
-            className={({ isActive }) =>
-              `${classNameDefault}  ${
-                isActive ? "navbar-active" : "navbar-links"
-              }`}
-          >
-            Home
-          </NavLink>
-        </li>
-        <li className=" transition-opacity transition-all duration-100 ease-in-out active:scale-90 ">
-          <NavLink
-            to="/config"
-            className={({ isActive }) =>
-              `${classNameDefault} ${
-                isActive ? "navbar-active" : "navbar-links"
-              }`}
-          >
-            Config
-          </NavLink>
-        </li>
-      </ul>
-    </nav>
+    <aside className="sidebar">
+      <div className="brand">
+        <div className="brand-mark">R</div>
+        <div>
+          <strong>Simulador</strong>
+          <span>Reciclaje de cables</span>
+        </div>
+      </div>
+
+      <nav className="nav" aria-label="Principal">
+        <ul className="nav-list">
+          <li>
+            <NavLink
+              to="/"
+              className={({ isActive }) =>
+                `nav-item ${isActive ? "active" : ""}`}
+            >
+              <span className="nav-icon">1</span>
+              Resumen
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/config"
+              className={({ isActive }) =>
+                `nav-item ${isActive ? "active" : ""}`}
+            >
+              <span className="nav-icon">2</span>
+              Configuracion
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/homes"
+              className={({ isActive }) =>
+                `nav-item ${isActive ? "active" : ""}`}
+            >
+              <span className="nav-icon">3</span>
+              Conexion
+            </NavLink>
+          </li>
+        </ul>
+      </nav>
+
+      <section className="control-block">
+        <label>Velocidad de simulacion</label>
+        <div className="side-actions">
+          <button className="secondary compact" type="button">1x</button>
+          <button className="primary compact" type="button">2x</button>
+          <button className="secondary compact" type="button">3x</button>
+        </div>
+      </section>
+    </aside>
   );
 }
 

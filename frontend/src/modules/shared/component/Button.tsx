@@ -5,9 +5,14 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
 }
 
-export default function Button({ children, ...props }: ButtonProps) {
+export default function Button(
+  { children, className = "", variant, ...props }: ButtonProps,
+) {
   return (
-    <button className={`btn btn-${props.variant}`} {...props}>
+    <button
+      className={`btn btn-${variant ?? "secondary"} ${className}`}
+      {...props}
+    >
       {children}
     </button>
   );
