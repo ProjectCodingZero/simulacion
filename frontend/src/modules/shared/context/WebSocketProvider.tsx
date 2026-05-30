@@ -1,84 +1,94 @@
-import { createContext, useContext, useEffect, useRef, useState } from "react";
-import { io, type Socket } from "socket.io-client";
-import { env } from "@/env.ts";
+import type { ReactNode } from "react";
+import { createContext, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
+import {
+  type AppSocket,
+  createWebSocketClient,
+  type SetSeedPayload,
+} from "@/modules/shared/services/websocketClient.ts";
+
 export interface WebSocketContextState {
-  socket: Socket;
   isConnected: boolean;
   connect: () => void;
   disconnect: () => void;
-  setSeed: ({ seed, cable }: { seed: string; cable: string }) => void;
+  setSeed: (payload: SetSeedPayload) => void;
 }
-const API_URL: string = `http://${env[`VITE_UVICORN_HOST`]}:${
-  env[`VITE_UVICORN_PORT`]
-}`;
-export const WebSocketContext = createContext<WebSocketContextState>(
+
+export const WebSocketContext = createContext<WebSocketContextState | null>(
   null,
 );
-export function WebSocketProvider(
-  { children }: { children: React.ReactNode },
-) {
-  const [isConnected, setIsConnected] = useState<boolean>(false);
-  const socketRef = useRef<Socket>(null);
-  const handleConnect = () => {
-    if (socketRef.current) {
-      socketRef.current.connect();
-    } else {
-      toast.error("Failed to connect");
+
+export function WebSocketProvider({ children }: { children: ReactNode }) {
+  const [isConnected, setIsConnected] = useState(false);
+  const socketRef = useRef<AppSocket | null>(null);
+
+  const connect = () => {
+    const socket = socketRef.current;
+
+    if (!socket) {
+      toast.error("No se pudo crear la conexion");
       setIsConnected(false);
+      return;
     }
+
+    socket.connect();
   };
-  const handleDisconnect = () => {
-    if (socketRef.current) {
-      socketRef.current.disconnect();
-    }
+
+  const disconnect = () => {
+    socketRef.current?.disconnect();
     setIsConnected(socketRef.current?.connected ?? false);
   };
-  const handleSetSeed = ({ seed, cable }: { seed: string; cable: string }) => {
-    setIsConnected(socketRef.current?.connected ?? false);
-    if (socketRef.current && isConnected) {
-      socketRef.current.emit("setSeed", { seed, cable });
+
+  const setSeed = ({ seed, cable }: SetSeedPayload) => {
+    const socket = socketRef.current;
+
+    if (!socket?.connected) {
+      toast.error("No hay conexion con el server");
+      setIsConnected(false);
+      return;
     }
-    setIsConnected(socketRef.current?.connected ?? false);
+
+    socket.emit("setSeed", { seed, cable });
   };
+
   useEffect(() => {
-    socketRef.current = io(API_URL, { path: "/ws", autoConnect: false });
-    socketRef.current.on("connect", () => {
+    const socket = createWebSocketClient();
+    socketRef.current = socket;
+
+    const handleConnect = () => {
       setIsConnected(true);
       toast.success("Conectado");
-    });
-    socketRef.current.on("disconnect", () => {
+    };
+
+    const handleDisconnect = () => {
       setIsConnected(false);
       toast.success("Desconectado");
-    });
-    socketRef.current.on(
-      "setSeed",
-      ({ seed, cable }: { seed: string; cable: string }) => {
-        if (!isConnected) {
-          toast.error(`No hay conexion con el server`);
-        } else {
-          toast.success(`Seed recibido: ${seed}, cable: ${cable}`);
-        }
-      },
-    );
-    return () => {
-      console.log("Limpiando socket antiguo...");
-      if (socketRef.current) {
-        socketRef.current.off("connect");
-        socketRef.current.off("disconnect");
-        socketRef.current.off("setSeed");
-        socketRef.current.disconnect();
-      }
     };
-  }, [socketRef]);
+
+    const handleSetSeed = ({ seed, cable }: SetSeedPayload) => {
+      toast.success(`Seed recibido: ${seed}, cable: ${cable}`);
+    };
+
+    socket.on("connect", handleConnect);
+    socket.on("disconnect", handleDisconnect);
+    socket.on("setSeed", handleSetSeed);
+
+    return () => {
+      socket.off("connect", handleConnect);
+      socket.off("disconnect", handleDisconnect);
+      socket.off("setSeed", handleSetSeed);
+      socket.disconnect();
+      socketRef.current = null;
+    };
+  }, []);
+
   return (
     <WebSocketContext
       value={{
-        socket: socketRef.current,
         isConnected,
-        connect: handleConnect,
-        disconnect: handleDisconnect,
-        setSeed: handleSetSeed,
+        connect,
+        disconnect,
+        setSeed,
       }}
     >
       {children}

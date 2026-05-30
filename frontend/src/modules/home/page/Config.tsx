@@ -94,7 +94,11 @@ function Config() {
             </Button>
             <Button
               variant="secondary"
-              onClick={() => setSeed(config.seed, config.cable)}
+              onClick={() =>
+                setSeed({
+                  seed: config.seed ?? "",
+                  cable: config.cable ?? "",
+                })}
             >
               Establecer Semilla
             </Button>

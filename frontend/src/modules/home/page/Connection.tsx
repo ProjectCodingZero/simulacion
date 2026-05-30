@@ -2,7 +2,7 @@ import Button from "@/modules/shared/component/Button";
 import { useSocket } from "@/modules/shared/hooks/useWebsocket";
 
 function Connection() {
-  const { socket, isConnected, connect, disconnect } = useSocket();
+  const { isConnected, connect, disconnect } = useSocket();
   return (
     <section className="panel">
       <div className="section-heading">
@@ -15,19 +15,13 @@ function Connection() {
       <div className="side-actions config-actions">
         <Button
           variant="primary"
-          onClick={() => {
-            connect();
-            console.log(`socket: ${socket.active}`);
-          }}
+          onClick={connect}
         >
           Connect {isConnected ? "online" : "offline"}
         </Button>
         <Button
           variant="secondary"
-          onClick={() => {
-            disconnect();
-            console.log(`socket: ${socket.active}`);
-          }}
+          onClick={disconnect}
         >
           Disconnect
         </Button>
