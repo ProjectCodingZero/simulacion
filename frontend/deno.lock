@@ -21,6 +21,7 @@
     "npm:@vitejs/plugin-react@^6.0.2": "6.0.2_vite@8.0.14",
     "npm:autoprefixer@10": "10.5.0_postcss@8.5.15",
     "npm:autoprefixer@^10.5.0": "10.5.0_postcss@8.5.15",
+    "npm:lucide-react@^1.17.0": "1.17.0_react@19.2.6",
     "npm:path-to-regexp@^6.3.0": "6.3.0",
     "npm:postcss@^8.5.15": "8.5.15",
     "npm:react-dom@^19.2.6": "19.2.6_react@19.2.6",
@@ -632,6 +633,12 @@
         "lightningcss-win32-x64-msvc"
       ]
     },
+    "lucide-react@1.17.0_react@19.2.6": {
+      "integrity": "sha512-9FA9evdox/JQL5PT57fdA1x/yg8T7knJ98+zjTL3UfKza6pflQUUh3XtaQIHKvnsJw1lmsEyHVlt5jchYxOQ5w==",
+      "dependencies": [
+        "react"
+      ]
+    },
     "magic-string@0.30.21": {
       "integrity": "sha512-vd2F4YUyEXKGcLHoq+TEyCjxueSeHnFxyyjNp80yg0XV4vUhnDer/lvvlqM/arB5bXQN5K2/3oinyCRyx8T2CQ==",
       "dependencies": [
@@ -854,6 +861,7 @@
       "npm:@types/react@^19.2.15",
       "npm:@vitejs/plugin-react@^6.0.2",
       "npm:autoprefixer@^10.5.0",
+      "npm:lucide-react@^1.17.0",
       "npm:postcss@^8.5.15",
       "npm:react-dom@^19.2.6",
       "npm:react-hot-toast@^2.6.0",

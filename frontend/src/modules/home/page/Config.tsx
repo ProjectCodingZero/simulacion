@@ -20,9 +20,10 @@ function Config() {
     };
   };
   return (
-    <section className="panel">
+    <section className="panel config-panel">
       <div className="section-heading">
-        <div>
+        <div className="section-title">
+          <span className="section-kicker">Parametros</span>
           <h1>Configuracion inicial</h1>
           <p>Defina los parametros de conexion y simulacion.</p>
         </div>
@@ -30,8 +31,8 @@ function Config() {
 
       <div className="form-grid">
         <FieldText legend="Semilla" className="field-card">
-          <small>Permite repetir exactamente los mismos resultados.</small>
           <label htmlFor="seed">Seed</label>
+          <small>Permite repetir exactamente los mismos resultados.</small>
           <input
             disabled={!isConnected}
             placeholder="1234"
@@ -47,10 +48,10 @@ function Config() {
         </FieldText>
 
         <FieldText legend="Cable" className="field-card">
+          <label htmlFor="cable">Cable</label>
           <small>
             Cantidad o identificador de cable para enviar al simulador.
           </small>
-          <label htmlFor="cable">Cable</label>
           <input
             disabled={!isConnected}
             placeholder="Cable"
@@ -68,10 +69,10 @@ function Config() {
 
       <div className="info-line">
         <span>i</span>
-        La configuracion se envia solo cuando la conexion esta activa.
+        <p>La configuracion se envia solo cuando la conexion esta activa.</p>
       </div>
 
-      <div className="side-actions config-actions">
+      <div className="panel-actions">
         {!isConnected && (
           <Button
             variant="primary"

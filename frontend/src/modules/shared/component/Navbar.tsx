@@ -1,10 +1,13 @@
+import { Gauge, LayoutDashboard, Recycle, Settings, Wifi } from "lucide-react";
 import { NavLink } from "react-router-dom";
 
 function Navbar() {
   return (
     <aside className="sidebar">
       <div className="brand">
-        <div className="brand-mark">R</div>
+        <div className="brand-mark">
+          <Recycle size={22} aria-hidden="true" strokeWidth={2.2} />
+        </div>
         <div>
           <strong>Simulador</strong>
           <span>Reciclaje de cables</span>
@@ -19,7 +22,9 @@ function Navbar() {
               className={({ isActive }) =>
                 `nav-item ${isActive ? "active" : ""}`}
             >
-              <span className="nav-icon">1</span>
+              <span className="nav-icon">
+                <LayoutDashboard size={18} aria-hidden="true" />
+              </span>
               Resumen
             </NavLink>
           </li>
@@ -29,7 +34,9 @@ function Navbar() {
               className={({ isActive }) =>
                 `nav-item ${isActive ? "active" : ""}`}
             >
-              <span className="nav-icon">2</span>
+              <span className="nav-icon">
+                <Settings size={18} aria-hidden="true" />
+              </span>
               Configuracion
             </NavLink>
           </li>
@@ -39,7 +46,9 @@ function Navbar() {
               className={({ isActive }) =>
                 `nav-item ${isActive ? "active" : ""}`}
             >
-              <span className="nav-icon">3</span>
+              <span className="nav-icon">
+                <Wifi size={18} aria-hidden="true" />
+              </span>
               Conexion
             </NavLink>
           </li>
@@ -47,7 +56,10 @@ function Navbar() {
       </nav>
 
       <section className="control-block">
-        <label>Velocidad de simulacion</label>
+        <label>
+          <Gauge size={17} aria-hidden="true" />
+          Velocidad de simulacion
+        </label>
         <div className="side-actions">
           <button className="secondary compact" type="button">1x</button>
           <button className="primary compact" type="button">2x</button>

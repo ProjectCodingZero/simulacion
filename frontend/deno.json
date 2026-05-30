@@ -12,6 +12,7 @@
     "@tajpouria/cors": "jsr:@tajpouria/cors@^1.2.1",
     "@types/react": "npm:@types/react@^19.2.15",
     "autoprefixer": "npm:autoprefixer@^10.5.0",
+    "lucide-react": "npm:lucide-react@^1.17.0",
     "postcss": "npm:postcss@^8.5.15",
     "react": "npm:react@^19.2.6",
     "react-dom": "npm:react-dom@^19.2.6",
