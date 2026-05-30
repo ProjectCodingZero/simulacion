@@ -1,7 +1,7 @@
 import Button from "@/modules/shared/component/Button";
 import { useSocket } from "@/modules/shared/hooks/useWebsocket";
 
-function Homes() {
+function Connection() {
   const { socket, isConnected, connect, disconnect } = useSocket();
   return (
     <section className="panel">
@@ -36,4 +36,4 @@ function Homes() {
   );
 }
 
-export default Homes;
+export default Connection;

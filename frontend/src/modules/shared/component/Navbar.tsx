@@ -42,7 +42,7 @@ function Navbar() {
           </li>
           <li>
             <NavLink
-              to="/homes"
+              to="/connection"
               className={({ isActive }) =>
                 `nav-item ${isActive ? "active" : ""}`}
             >
