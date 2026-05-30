@@ -49,7 +49,7 @@ function Navbar() {
               <span className="nav-icon">
                 <Wifi size={18} aria-hidden="true" />
               </span>
-              Conexion
+              Red
             </NavLink>
           </li>
         </ul>

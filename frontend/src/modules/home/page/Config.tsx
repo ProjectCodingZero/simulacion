@@ -9,7 +9,7 @@ interface ConfigUser {
 }
 function Config() {
   const [config, setConfig] = useState<ConfigUser>({});
-  const { isConnected, connect, disconnect, setSeed } = useSocket();
+  const { isConnected, setSeed } = useSocket();
   const handleCharacter = (caracteresProhibidos: string[]): (
     e: React.KeyboardEvent<HTMLInputElement>,
   ) => void => {
@@ -69,41 +69,25 @@ function Config() {
 
       <div className="info-line">
         <span>i</span>
-        <p>La configuracion se envia solo cuando la conexion esta activa.</p>
+        <p>
+          {isConnected
+            ? "La conexion esta activa. Puede enviar la configuracion."
+            : "Para editar y enviar la configuracion, conecte primero desde la pantalla Conexion."}
+        </p>
       </div>
 
       <div className="panel-actions">
-        {!isConnected && (
-          <Button
-            variant="primary"
-            onClick={connect}
-          >
-            Conectar
-          </Button>
-        )}
-        {isConnected && (
-          <>
-            <Button
-              variant="primary"
-              onClick={() => {
-                disconnect();
-                setConfig({ cable: "", seed: "" });
-              }}
-            >
-              Desconectar
-            </Button>
-            <Button
-              variant="secondary"
-              onClick={() =>
-                setSeed({
-                  seed: config.seed ?? "",
-                  cable: config.cable ?? "",
-                })}
-            >
-              Establecer Semilla
-            </Button>
-          </>
-        )}
+        <Button
+          disabled={!isConnected}
+          variant="secondary"
+          onClick={() =>
+            setSeed({
+              seed: config.seed ?? "",
+              cable: config.cable ?? "",
+            })}
+        >
+          Establecer Semilla
+        </Button>
       </div>
     </section>
   );

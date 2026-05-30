@@ -91,7 +91,7 @@
   }
 
   .content-area {
-    @apply min-w-0 p-7;
+    @apply relative min-w-0 p-7 pt-16;
   }
 
   .sidebar {
@@ -148,6 +148,22 @@
 
   .config-actions {
     @apply mt-[18px] max-w-80;
+  }
+
+  .top-connection-status {
+    @apply absolute right-7 top-5 flex items-center gap-2 rounded-lg border border-app-line bg-white px-3 py-2 text-xs font-bold text-app-text shadow-app-soft;
+  }
+
+  .status-dot {
+    @apply h-2.5 w-2.5 rounded-full;
+  }
+
+  .status-dot-online {
+    @apply bg-app-green shadow-[0_0_0_4px_rgba(46,168,79,0.14)];
+  }
+
+  .status-dot-offline {
+    @apply bg-app-red shadow-[0_0_0_4px_rgba(220,59,59,0.12)];
   }
 
   .btn,
@@ -243,6 +259,30 @@
 
   .config-panel {
     @apply mx-auto w-full max-w-[920px];
+  }
+
+  .network-panel {
+    @apply mx-auto w-full max-w-[760px];
+  }
+
+  .network-card {
+    @apply flex items-center gap-4 rounded-lg border border-app-line bg-[#f8fafc] p-5;
+  }
+
+  .network-icon {
+    @apply grid h-14 w-14 flex-none place-items-center rounded-lg bg-white text-app-blue shadow-app-soft;
+  }
+
+  .network-card span {
+    @apply text-xs font-extrabold uppercase tracking-[0.08em] text-app-muted;
+  }
+
+  .network-card strong {
+    @apply mt-1 block text-xl font-extrabold text-app-text;
+  }
+
+  .network-card p {
+    @apply mt-1;
   }
 
   .panel-actions {
