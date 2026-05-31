@@ -1,4 +1,5 @@
 import { env } from "@/env.ts";
+import type { SimulationDashboardPayload } from "@/modules/shared/types/simulation.ts";
 import { io, type Socket } from "socket.io-client";
 
 export interface SetSeedPayload {
@@ -8,6 +9,7 @@ export interface SetSeedPayload {
 
 interface ServerToClientEvents {
   setSeed: (payload: SetSeedPayload) => void;
+  simulationDashboard: (payload: SimulationDashboardPayload) => void;
 }
 
 interface ClientToServerEvents {

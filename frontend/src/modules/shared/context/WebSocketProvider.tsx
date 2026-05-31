@@ -1,14 +1,17 @@
 import type { ReactNode } from "react";
 import { createContext, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
+import { INITIAL_SIMULATION_DASHBOARD } from "@/modules/shared/constants/simulationDashboard.ts";
 import {
   type AppSocket,
   createWebSocketClient,
   type SetSeedPayload,
 } from "@/modules/shared/services/websocketClient.ts";
+import type { SimulationDashboardPayload } from "@/modules/shared/types/simulation.ts";
 
 export interface WebSocketContextState {
   isConnected: boolean;
+  dashboard: SimulationDashboardPayload;
   connect: () => void;
   disconnect: () => void;
   setSeed: (payload: SetSeedPayload) => void;
@@ -20,6 +23,9 @@ export const WebSocketContext = createContext<WebSocketContextState | null>(
 
 export function WebSocketProvider({ children }: { children: ReactNode }) {
   const [isConnected, setIsConnected] = useState(false);
+  const [dashboard, setDashboard] = useState<SimulationDashboardPayload>(
+    INITIAL_SIMULATION_DASHBOARD,
+  );
   const socketRef = useRef<AppSocket | null>(null);
 
   const connect = () => {
@@ -69,14 +75,20 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
       toast.success(`Seed recibido: ${seed}, cable: ${cable}`);
     };
 
+    const handleSimulationDashboard = (payload: SimulationDashboardPayload) => {
+      setDashboard(payload);
+    };
+
     socket.on("connect", handleConnect);
     socket.on("disconnect", handleDisconnect);
     socket.on("setSeed", handleSetSeed);
+    socket.on("simulationDashboard", handleSimulationDashboard);
 
     return () => {
       socket.off("connect", handleConnect);
       socket.off("disconnect", handleDisconnect);
       socket.off("setSeed", handleSetSeed);
+      socket.off("simulationDashboard", handleSimulationDashboard);
       socket.disconnect();
       socketRef.current = null;
     };
@@ -86,6 +98,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
     <WebSocketContext
       value={{
         isConnected,
+        dashboard,
         connect,
         disconnect,
         setSeed,

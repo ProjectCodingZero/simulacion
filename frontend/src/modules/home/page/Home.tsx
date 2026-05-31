@@ -1,6 +1,109 @@
-import { Cog, Magnet, PackageCheck, Truck, UserCheck } from "lucide-react";
+import {
+  Cog,
+  type LucideIcon,
+  Magnet,
+  PackageCheck,
+  Truck,
+  UserCheck,
+} from "lucide-react";
+import { useSocket } from "@/modules/shared/hooks/useWebsocket.ts";
+import type {
+  MaterialId,
+  ProcessStageId,
+} from "@/modules/shared/types/simulation.ts";
+
+interface StageView {
+  id: ProcessStageId;
+  number: number;
+  label: string;
+  description: string;
+  colorClass: string;
+  Icon: LucideIcon;
+}
+
+interface MaterialView {
+  id: MaterialId;
+  label: string;
+  className: string;
+}
+
+const STAGES: StageView[] = [
+  {
+    id: "reception",
+    number: 1,
+    label: "Recepcion",
+    description: "Material ingresado",
+    colorClass: "blue",
+    Icon: Truck,
+  },
+  {
+    id: "classification",
+    number: 2,
+    label: "Clasificacion",
+    description: "Material separado",
+    colorClass: "green",
+    Icon: UserCheck,
+  },
+  {
+    id: "crushing",
+    number: 3,
+    label: "Triturado",
+    description: "Material procesado",
+    colorClass: "orange",
+    Icon: Cog,
+  },
+  {
+    id: "separation",
+    number: 4,
+    label: "Separacion",
+    description: "Material recuperado",
+    colorClass: "purple",
+    Icon: Magnet,
+  },
+  {
+    id: "output",
+    number: 5,
+    label: "Salida",
+    description: "Resultado final",
+    colorClass: "teal",
+    Icon: PackageCheck,
+  },
+];
+
+const MATERIALS: MaterialView[] = [
+  { id: "copper", label: "Cobre", className: "copper" },
+  { id: "aluminum", label: "Aluminio", className: "aluminum" },
+  { id: "plastic", label: "Plastico", className: "plastic" },
+  { id: "other", label: "Otros", className: "other" },
+  { id: "losses", label: "Perdidas", className: "losses" },
+];
+
+const statusText = {
+  idle: "Configure los datos y ejecute la simulacion.",
+  running: "Simulacion en ejecucion.",
+  completed: "Simulacion finalizada.",
+  paused: "Simulacion pausada.",
+  error: "La simulacion informo un error.",
+};
+
+function formatKg(value: number) {
+  return `${formatNumber(value)} kg`;
+}
+
+function formatPercent(value: number) {
+  return `${formatNumber(value)} %`;
+}
+
+function formatNumber(value: number) {
+  return value.toLocaleString("es-AR", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+}
 
 function Home() {
+  const { dashboard } = useSocket();
+
   return (
     <div className="page-stack">
       <section className="panel">
@@ -8,79 +111,35 @@ function Home() {
           <div className="section-title">
             <span className="section-kicker">Vista general</span>
             <h1>Resumen del proceso</h1>
-            <p>Configure los datos y ejecute la simulacion.</p>
+            <p>{dashboard.message ?? statusText[dashboard.status]}</p>
           </div>
-          <button className="secondary compact" disabled type="button">
+          <button
+            className="secondary compact"
+            disabled={dashboard.status !== "completed"}
+            type="button"
+          >
             Exportar CSV
           </button>
         </div>
 
         <div className="process-strip">
-          <article className="stage-card">
-            <div className="stage-heading">
-              <span className="stage-number blue">1</span>
-              <strong>Recepcion</strong>
-            </div>
-            <Truck
-              className="stage-icon"
-              aria-hidden="true"
-              strokeWidth={1.8}
-            />
-            <b>0 kg</b>
-            <small>Material ingresado</small>
-          </article>
-          <div className="arrow">&rarr;</div>
-          <article className="stage-card">
-            <div className="stage-heading">
-              <span className="stage-number green">2</span>
-              <strong>Clasificacion</strong>
-            </div>
-            <UserCheck
-              className="stage-icon"
-              aria-hidden="true"
-              strokeWidth={1.8}
-            />
-            <b>0 kg</b>
-            <small>Material separado</small>
-          </article>
-          <div className="arrow">&rarr;</div>
-          <article className="stage-card">
-            <div className="stage-heading">
-              <span className="stage-number orange">3</span>
-              <strong>Triturado</strong>
-            </div>
-            <Cog className="stage-icon" aria-hidden="true" strokeWidth={1.8} />
-            <b>0 kg</b>
-            <small>Material procesado</small>
-          </article>
-          <div className="arrow">&rarr;</div>
-          <article className="stage-card">
-            <div className="stage-heading">
-              <span className="stage-number purple">4</span>
-              <strong>Separacion</strong>
-            </div>
-            <Magnet
-              className="stage-icon"
-              aria-hidden="true"
-              strokeWidth={1.8}
-            />
-            <b>0 kg</b>
-            <small>Material recuperado</small>
-          </article>
-          <div className="arrow">&rarr;</div>
-          <article className="stage-card">
-            <div className="stage-heading">
-              <span className="stage-number teal">5</span>
-              <strong>Salida</strong>
-            </div>
-            <PackageCheck
-              className="stage-icon"
-              aria-hidden="true"
-              strokeWidth={1.8}
-            />
-            <b>0 kg</b>
-            <small>Resultado final</small>
-          </article>
+          {STAGES.map((
+            { id, number, label, description, colorClass, Icon },
+          ) => (
+            <article className="stage-card" key={id}>
+              <div className="stage-heading">
+                <span className={`stage-number ${colorClass}`}>{number}</span>
+                <strong>{label}</strong>
+              </div>
+              <Icon
+                className="stage-icon"
+                aria-hidden="true"
+                strokeWidth={1.8}
+              />
+              <b>{formatKg(dashboard.stages[id].kg)}</b>
+              <small>{description}</small>
+            </article>
+          ))}
         </div>
       </section>
 
@@ -91,31 +150,15 @@ function Home() {
             <p>Distribucion de materiales recuperados y perdidas.</p>
           </div>
           <div className="material-grid">
-            <article className="material-card copper">
-              <span>Cobre</span>
-              <strong>0 kg</strong>
-              <small>0,00 %</small>
-            </article>
-            <article className="material-card aluminum">
-              <span>Aluminio</span>
-              <strong>0 kg</strong>
-              <small>0,00 %</small>
-            </article>
-            <article className="material-card plastic">
-              <span>Plastico</span>
-              <strong>0 kg</strong>
-              <small>0,00 %</small>
-            </article>
-            <article className="material-card other">
-              <span>Otros</span>
-              <strong>0 kg</strong>
-              <small>0,00 %</small>
-            </article>
-            <article className="material-card losses">
-              <span>Perdidas</span>
-              <strong>0 kg</strong>
-              <small>0,00 %</small>
-            </article>
+            {MATERIALS.map(({ id, label, className }) => (
+              <article className={`material-card ${className}`} key={id}>
+                <span>{label}</span>
+                <strong>{formatKg(dashboard.materials[id].kg)}</strong>
+                <small>
+                  {formatPercent(dashboard.materials[id].percentage)}
+                </small>
+              </article>
+            ))}
           </div>
         </section>
 
@@ -127,38 +170,38 @@ function Home() {
           <dl>
             <div>
               <dt>Dias simulados</dt>
-              <dd>0</dd>
+              <dd>{dashboard.simulatedDays}</dd>
             </div>
             <div>
               <dt>Horas simuladas</dt>
-              <dd>0</dd>
+              <dd>{dashboard.simulatedHours}</dd>
             </div>
             <div>
               <dt>Cable recibido</dt>
-              <dd>0 kg</dd>
+              <dd>{formatKg(dashboard.totals.cableReceivedKg)}</dd>
             </div>
             <div>
               <dt>Material recuperado</dt>
-              <dd>0 kg</dd>
+              <dd>{formatKg(dashboard.totals.recoveredKg)}</dd>
             </div>
             <div>
               <dt>Perdidas totales</dt>
-              <dd>0 kg</dd>
+              <dd>{formatKg(dashboard.totals.lossesKg)}</dd>
             </div>
             <div>
               <dt>Eficiencia</dt>
-              <dd>0,00 %</dd>
+              <dd>{formatPercent(dashboard.totals.efficiencyPercentage)}</dd>
             </div>
           </dl>
           <div className="lot-summary">
             <span>
-              Cobre unipolar: <b>0</b>
+              Cobre unipolar: <b>{dashboard.lots.copperUnipolar}</b>
             </span>
             <span>
-              Aluminio: <b>0</b>
+              Aluminio: <b>{dashboard.lots.aluminum}</b>
             </span>
             <span>
-              Mixto: <b>0</b>
+              Mixto: <b>{dashboard.lots.mixed}</b>
             </span>
           </div>
         </aside>
