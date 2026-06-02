@@ -19,7 +19,9 @@ interface ClientToServerEvents {
 export type AppSocket = Socket<ServerToClientEvents, ClientToServerEvents>;
 
 const WEBSOCKET_URL =
-  `http://${env.VITE_UVICORN_HOST}:${env.VITE_UVICORN_PORT}`;
+  env.VITE_BACKEND_ORIGIN ??
+  (globalThis.location?.origin ||
+    `http://${env.VITE_UVICORN_HOST}:${env.VITE_UVICORN_PORT}`);
 
 export function createWebSocketClient(): AppSocket {
   return io(WEBSOCKET_URL, { path: "/ws", autoConnect: false });

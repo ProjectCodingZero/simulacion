@@ -9,15 +9,21 @@ import deno from "@deno/vite-plugin";
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, Deno.cwd(), "");
-  const target = env.API_URL || "https://localhost:7000/api";
+  const apiTarget = env.API_URL || "http://localhost:8000/api";
+  const backendOrigin = env.BACKEND_ORIGIN || "http://localhost:8000";
 
   return defineConfig({
     server: {
       proxy: {
         "/api": {
-          target,
+          target: apiTarget,
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api/, ""),
+        },
+        "/ws": {
+          target: backendOrigin,
+          changeOrigin: true,
+          ws: true,
         },
       },
     },
