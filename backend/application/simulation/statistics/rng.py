@@ -144,32 +144,21 @@ class Congruencial(BaseModel):
     __arr: list[int] = []
 
     seed: int
-    mult: int
-    aditiva: int
-    mod: int
-    async def __pruebas__(self, arr: list[Num0_1]) -> bool:
+    mult: int = 1_103_515_245
+    aditiva: int = 12_345
+    mod: int = 2**31
+    def __pruebas__(self, arr: list[Num0_1]) -> bool:
         # OBSOLETO: se conserva para experimentos con generadores alternativos.
         # No debe ejecutarse desde el handler async de Socket.IO.
         task_pruebas = [
-            asyncio.create_task(pruebas.promedio(arr, 0.957)),
-            asyncio.create_task(pruebas.frecuencia(arr, 2, 0.675)),
-            asyncio.create_task(pruebas.serie(arr, 3, 0.957)),
-            asyncio.create_task(pruebas.k_s(arr, 0.375)),
-            asyncio.create_task(pruebas.arriba_abajo_media(arr, 7.81))
+            pruebas.promedio(arr, 0.957),
+            pruebas.frecuencia(arr, 2, 0.675),
+            pruebas.serie(arr, 3, 0.957),
+            pruebas.k_s(arr, 0.375),
+            pruebas.arriba_abajo_media(arr, 7.81)
         ]
-        for task in asyncio.as_completed(task_pruebas):
-            try:
-                exito = await task
-
-                print(f"DEBUG: Una tarea terminó con: {exito}")
-                if exito:
-                    for t in task_pruebas:
-                        if not t.done(): t.cancel()
-                    return True
-            except asyncio.CancelledError:
-                continue
-            except Exception as e:
-                print(f"Error en las pruebas: {e}")
+        if True in task_pruebas:
+            return True
         return False
 
     def mixto(self, total: int = 1) -> list[Num0_1]:
@@ -220,8 +209,6 @@ class Congruencial(BaseModel):
         self.__arr = [int((str(n).split('.')[1])) for n in arr]
 
     def __validar__(self, arr: list[Num0_1]) -> bool:
-        if len(arr) < 2:
-            return True
 
         try:
             asyncio.get_running_loop()
@@ -276,7 +263,4 @@ class Congruencial(BaseModel):
         return self.__arr
 
 generador = Congruencial(
-        seed= time.time_ns(),
-        aditiva= datetime.now().minute,
-        mult= datetime.now().second,
-        mod= datetime.now().microsecond)
+        seed= time.time_ns())

@@ -2,14 +2,14 @@ from math import sqrt
 from core.type import Num0_1
 
 
-async def promedio(arr: list[Num0_1], confianza: float = 1.93) -> bool:
+def promedio(arr: list[Num0_1], confianza: float = 1.93) -> bool:
     length = len(arr)
     promedio = sum(arr) / length
     promedio_estadistico = (promedio - 1 / 2) * sqrt(length) / sqrt(1 / 12)
     return abs(promedio_estadistico) < confianza
 
 
-async def frecuencia(
+def frecuencia(
     arr: list[Num0_1], intervalos: int, confianza: float = 1.93
 ) -> bool:
     f_obtenida: dict[str, int] = {
@@ -30,7 +30,7 @@ async def frecuencia(
     return obtenido < confianza
 
 
-async def serie(arr: list[Num0_1], intervalos: int, confianza: float = 1.93) -> bool:
+def serie(arr: list[Num0_1], intervalos: int, confianza: float = 1.93) -> bool:
     if len(arr) % 2 != 0:
         return False
     f_list = [str(i / intervalos) for i in range(1, intervalos + 1)]
@@ -50,7 +50,7 @@ async def serie(arr: list[Num0_1], intervalos: int, confianza: float = 1.93) -> 
     estadistico_obtenido *= (intervalos ** 2) / (len(arr) // 2)
     return estadistico_obtenido < confianza
 
-async def k_s(arr: list[Num0_1], confianza: float = 1.93) -> bool:
+def k_s(arr: list[Num0_1], confianza: float = 1.93) -> bool:
     arr_diff: list[float] = []
 
     for idx, num in enumerate(arr, start=1):
@@ -58,7 +58,7 @@ async def k_s(arr: list[Num0_1], confianza: float = 1.93) -> bool:
         arr_diff.append(abs(num_diff))
     return max(arr_diff) < confianza
 
-async def arriba_abajo_media(arr: list[Num0_1], confianza: float = 1.93) -> bool:
+def arriba_abajo_media(arr: list[Num0_1], confianza: float = 1.93) -> bool:
     num_consecutive: list[int] = [int((i <= 0.5)) for i in arr]
     f_obtenido: dict[int, int] = {}
     acumulador = 1

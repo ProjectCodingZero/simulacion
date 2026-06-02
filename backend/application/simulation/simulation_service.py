@@ -1,8 +1,9 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
+from os import MFD_ALLOW_SEALING
 from uuid import uuid4
-
+import asyncio
 from application.simulation.statistics.probabilidad import normal
 from application.simulation.statistics.rng import generador
 
@@ -184,7 +185,13 @@ class StadisticService:
         return round(value / total * 100, 2)
 
     def _gu(self) -> float:
-        return float(generador.mixto(1)[0])
+        flag: bool = False
+        num: float = 0
+        while not flag:
+            arr = generador.mixto(10)
+            flag = generador.__pruebas__(arr)
+            num = arr[0]
+        return num
 
 
 simulation_service = StadisticService()
