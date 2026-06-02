@@ -53,7 +53,7 @@ class StadisticService:
         }
         lote["tipo_cable"] = self._seleccionar_tipo_cable()
         lote["contaminacion"] = self._seleccionar_contaminacion()
-        lote["perdidas_porcentaje"] = max(normal(8, 2), 0)
+        lote["perdidas_porcentaje"] = max(normal(8, 2), 0) /100
         lote["estado_proceso"] = self._determinar_estado_proceso(
             lote["tipo_cable"],
             lote["contaminacion"],
@@ -141,7 +141,7 @@ class StadisticService:
     def _calcular_materiales(self, lote: dict) -> None:
         composicion = self.COMPOSICION_POR_TIPO[lote["tipo_cable"]]
         peso = lote["peso_lote"]
-        perdidas_kg = peso * lote["perdidas_porcentaje"] / 100
+        perdidas_kg = peso * lote["perdidas_porcentaje"]
 
         lote["cobre_recuperado_kg"] = peso * composicion["copper"]
         lote["aluminio_recuperado_kg"] = peso * composicion["aluminum"]

@@ -59,7 +59,12 @@ def normal(media: float, desvio: float) -> float:
         Returns:
             (float): la curva normal aplicada con aletoriedad
     """
-    suma: float = sum(generador.mixto(12))
+    flag: bool = False
+    arr: list[float] = []
+    while not flag:
+        arr = generador.mixto(12)
+        flag = generador.__pruebas__(arr)
+    suma: float = sum(arr)
     return desvio * ( suma - 6) + media
 
 def poisson(alpha: float) -> int:
