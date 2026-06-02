@@ -3,13 +3,13 @@ from datetime import datetime
 
 from pydantic import BaseModel
 from core.type import Num0_1
-from stadistic import pruebas
+from application.simulation.statistics import pruebas
 import asyncio
 from math import sqrt
 
 # OBSOLETO/PENDIENTE DE REVISION: las funciones de generacion alternativas y
 # las pruebas asincronicas quedan como material historico del proyecto. La
-# simulacion actual solo usa generador.mixto() configurado como LCG stateful.
+# simulacion actual solo usa generador.mixto()
 def parte_central_cuadrado(seed: int, num: int, total: int = 1) -> list[Num0_1]:
     """
     Metodo parte central del cuadrado.

@@ -1,6 +1,6 @@
 import asyncio
 
-from aplication.stadistic_service import StadisticService, stadistic_service
+from application.simulation.simulation_service import StadisticService, simulation_service
 from log import logger
 
 
@@ -69,4 +69,4 @@ class SimulationHandler:
         return parsed
 
 
-simulation_handler = SimulationHandler(stadistic_service)
+simulation_handler = SimulationHandler(simulation_service)

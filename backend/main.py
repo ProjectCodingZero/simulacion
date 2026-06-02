@@ -2,7 +2,7 @@ import socketio
 from fastapi import FastAPI
 
 from api.api import main_router
-from aplication.simulation_handler import simulation_handler
+from application.simulation.simulation_handler import simulation_handler
 from core.configs import settings
 from log import logger
 

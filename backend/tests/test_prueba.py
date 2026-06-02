@@ -1,4 +1,4 @@
-from stadistic import rng
+from application.simulation.statistics import rng
 import asyncio
 
 # OBSOLETO: este archivo funciona como script exploratorio historico, no como

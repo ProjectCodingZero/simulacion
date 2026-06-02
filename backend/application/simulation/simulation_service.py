@@ -3,8 +3,8 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from uuid import uuid4
 
-from stadistic.probabilidad import normal
-from stadistic.rng import generador
+from application.simulation.statistics.probabilidad import normal
+from application.simulation.statistics.rng import generador
 
 
 class StadisticService:
@@ -187,4 +187,4 @@ class StadisticService:
         return float(generador.mixto(1)[0])
 
 
-stadistic_service = StadisticService()
+simulation_service = StadisticService()

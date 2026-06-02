@@ -1,6 +1,6 @@
 import math
 from itertools import accumulate
-from stadistic.rng import generador
+from application.simulation.statistics.rng import generador
 from math import e, log
 from typing import Callable
 from core.type import Num0_1
