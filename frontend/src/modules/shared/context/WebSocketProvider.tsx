@@ -45,7 +45,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
     setIsConnected(socketRef.current?.connected ?? false);
   };
 
-  const setSeed = ({ seed, cable }: SetSeedPayload) => {
+  const setSeed = ({ seed, dias }: SetSeedPayload) => {
     const socket = socketRef.current;
 
     if (!socket?.connected) {
@@ -54,7 +54,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
       return;
     }
 
-    socket.emit("setSeed", { seed, cable });
+    socket.emit("setSeed", { seed, dias });
   };
 
   useEffect(() => {
@@ -71,8 +71,8 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
       toast.success("Desconectado");
     };
 
-    const handleSetSeed = ({ seed, cable }: SetSeedPayload) => {
-      toast.success(`Seed recibido: ${seed}, cable: ${cable}`);
+    const handleSetSeed = ({ seed, dias }: SetSeedPayload) => {
+      toast.success(`Seed recibido: ${seed}, dias: ${dias}`);
     };
 
     const handleSimulationDashboard = (payload: SimulationDashboardPayload) => {

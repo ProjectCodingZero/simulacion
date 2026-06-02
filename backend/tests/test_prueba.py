@@ -1,6 +1,9 @@
 from stadistic import rng
 import asyncio
 
+# OBSOLETO: este archivo funciona como script exploratorio historico, no como
+# test automatizado actual. Hoy rompe pytest porque usa "pruebas" sin importarlo.
+# Se mantiene sin eliminar hasta reemplazarlo por tests del service/handler.
 print("hola")
 arr = rng.parte_central_cuadrado(6239, 4, 5)
 print(arr)

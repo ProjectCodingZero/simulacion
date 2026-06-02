@@ -5,7 +5,7 @@ import { useSocket } from "@modules/shared/hooks/useWebsocket.ts";
 
 interface ConfigUser {
   seed?: string;
-  cable?: string;
+  dias?: string;
 }
 function Config() {
   const [config, setConfig] = useState<ConfigUser>({});
@@ -38,7 +38,7 @@ function Config() {
             placeholder="1234"
             type="number"
             id="seed"
-            value={config.seed}
+            value={config.seed ?? ""}
             onKeyDown={handleCharacter(["e", "E", "+", "-", "."])}
             onChange={(e) => {
               const target = e.target.value;
@@ -47,21 +47,21 @@ function Config() {
           />
         </FieldText>
 
-        <FieldText legend="Cable" className="field-card">
-          <label htmlFor="cable">Cable</label>
+        <FieldText legend="Dias" className="field-card">
+          <label htmlFor="dias">Dias</label>
           <small>
-            Cantidad o identificador de cable para enviar al simulador.
+            Cantidad de dias a simular. Se procesa un lote por dia.
           </small>
           <input
             disabled={!isConnected}
-            placeholder="Cable"
+            placeholder="30"
             type="number"
-            id="cable"
-            value={config.cable}
+            id="dias"
+            value={config.dias ?? ""}
             onKeyDown={handleCharacter(["e", "E", "+", "-"])}
             onChange={(e) => {
               const target = e.target.value;
-              setConfig({ ...config, cable: target });
+              setConfig({ ...config, dias: target });
             }}
           />
         </FieldText>
@@ -83,10 +83,10 @@ function Config() {
           onClick={() =>
             setSeed({
               seed: config.seed ?? "",
-              cable: config.cable ?? "",
+              dias: config.dias ?? "",
             })}
         >
-          Establecer Semilla
+          Ejecutar simulacion
         </Button>
       </div>
     </section>

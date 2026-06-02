@@ -31,7 +31,6 @@ export interface SimulationMaterials {
   aluminum: MaterialMetric;
   plastic: MaterialMetric;
   other: MaterialMetric;
-  losses: MaterialMetric;
 }
 
 export interface SimulationTotals {

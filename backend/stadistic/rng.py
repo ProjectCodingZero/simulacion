@@ -1,11 +1,15 @@
 import time
 from datetime import datetime
-from logging import exception
 
 from pydantic import BaseModel
 from core.type import Num0_1
 from stadistic import pruebas
 import asyncio
+from math import sqrt
+
+# OBSOLETO/PENDIENTE DE REVISION: las funciones de generacion alternativas y
+# las pruebas asincronicas quedan como material historico del proyecto. La
+# simulacion actual solo usa generador.mixto() configurado como LCG stateful.
 def parte_central_cuadrado(seed: int, num: int, total: int = 1) -> list[Num0_1]:
     """
     Metodo parte central del cuadrado.
@@ -144,6 +148,8 @@ class Congruencial(BaseModel):
     aditiva: int
     mod: int
     async def __pruebas__(self, arr: list[Num0_1]) -> bool:
+        # OBSOLETO: se conserva para experimentos con generadores alternativos.
+        # No debe ejecutarse desde el handler async de Socket.IO.
         task_pruebas = [
             asyncio.create_task(pruebas.promedio(arr, 0.957)),
             asyncio.create_task(pruebas.frecuencia(arr, 2, 0.675)),
@@ -167,28 +173,29 @@ class Congruencial(BaseModel):
         return False
 
     def mixto(self, total: int = 1) -> list[Num0_1]:
-        flag: bool = False
         arr: list[Num0_1] = []
-        while not flag:
-            arr = congruencial_mixto(self.seed, self.mult, self.aditiva, self.mod, total)
-            try:
-                flag = asyncio.run(self.__pruebas__(arr))
-            except:
-                pass
-
-            self.__random__()
+        self.__normalizar_parametros__()
+        for _ in range(total):
+            self.seed = (self.mult * self.seed + self.aditiva) % self.mod
+            arr.append(self.seed / self.mod)
         return arr
 
+    def configurar_mixto(self, seed: int | None = None) -> None:
+        if seed is not None:
+            self.seed = max(seed, 1)
+
+        self.mult = 1_103_515_245
+        self.aditiva = 12_345
+        self.mod = 2**31
+
     def aditivo(self, total: int = 1) -> list[Num0_1]:
+        # OBSOLETO: no participa en el flujo actual de lotes/dashboard.
         if len(self.__arr) < 2: self.__random__()
         flag = False
         arr: list[float] = []
         while not flag:
             arr = congruencial_aditivo(self.__arr, self.mod, total)
-            try:
-                flag = asyncio.run(self.__pruebas__(arr))
-            except Exception as e:
-                print(e)
+            flag = self.__validar__(arr)
 
             self.__random__()
 
@@ -196,14 +203,12 @@ class Congruencial(BaseModel):
         return self.__arr
 
     def multiplicativo(self, total: int = 1):
+        # OBSOLETO: no participa en el flujo actual de lotes/dashboard.
         flag = False
         arr: list[float] = []
         while not flag:
             arr = congruencial_multiplicativo(self.seed, self.mult, self.mod, total)
-            try:
-                flag = asyncio.run(self.__pruebas__(arr))
-            except Exception as e:
-                print(e)
+            flag = self.__validar__(arr)
 
             self.__random__()
 
@@ -214,6 +219,40 @@ class Congruencial(BaseModel):
     def __internal_arr__(self, arr: list[Num0_1]):
         self.__arr = [int((str(n).split('.')[1])) for n in arr]
 
+    def __validar__(self, arr: list[Num0_1]) -> bool:
+        if len(arr) < 2:
+            return True
+
+        try:
+            asyncio.get_running_loop()
+        except RuntimeError:
+            return asyncio.run(self.__pruebas__(arr))
+
+        return self.__promedio__(arr, 0.957) or self.__frecuencia__(arr, 2, 0.675)
+
+    def __promedio__(self, arr: list[Num0_1], confianza: float) -> bool:
+        promedio = sum(arr) / len(arr)
+        promedio_estadistico = (promedio - 1 / 2) * sqrt(len(arr)) / sqrt(1 / 12)
+        return abs(promedio_estadistico) < confianza
+
+    def __frecuencia__(self, arr: list[Num0_1], intervalos: int, confianza: float) -> bool:
+        f_obtenida: dict[str, int] = {
+            str(i / intervalos): 0 for i in range(1, intervalos + 1)
+        }
+        for num in arr:
+            for limite in f_obtenida.keys():
+                if num <= float(limite):
+                    f_obtenida[limite] += 1
+                    break
+
+        obtenido: float = 0
+        v_esperado = len(arr) / intervalos
+        for v_obtenido in f_obtenida.values():
+            obtenido += (v_obtenido - v_esperado) ** 2
+
+        obtenido *= intervalos / len(arr)
+        return obtenido < confianza
+
     def __random__(self):
         if len(self.__arr) < 4:
             arr: list[Num0_1] = self.__mixto__(5)
@@ -222,7 +261,13 @@ class Congruencial(BaseModel):
         self.seed = self.__arr[-1]
         self.mult = self.__arr[-2]
         self.aditiva = self.__arr[0]
-        self.mod = self.seed % self.__arr[1]
+        self.mod = max(self.seed % self.__arr[1], 1)
+
+    def __normalizar_parametros__(self) -> None:
+        self.seed = max(int(self.seed), 1)
+        self.mult = max(int(self.mult), 1)
+        self.aditiva = max(int(self.aditiva), 1)
+        self.mod = max(int(self.mod), 2)
 
     def __mixto__(self, total = 1) -> list[Num0_1]:
         return congruencial_mixto(self.seed, self.mult, self.aditiva, self.mod, total)

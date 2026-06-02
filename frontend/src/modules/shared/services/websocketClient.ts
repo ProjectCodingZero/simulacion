@@ -4,7 +4,7 @@ import { io, type Socket } from "socket.io-client";
 
 export interface SetSeedPayload {
   seed: string;
-  cable: string;
+  dias: string;
 }
 
 interface ServerToClientEvents {

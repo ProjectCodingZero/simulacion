@@ -75,7 +75,6 @@ const MATERIALS: MaterialView[] = [
   { id: "aluminum", label: "Aluminio", className: "aluminum" },
   { id: "plastic", label: "Plastico", className: "plastic" },
   { id: "other", label: "Otros", className: "other" },
-  { id: "losses", label: "Perdidas", className: "losses" },
 ];
 
 const statusText = {

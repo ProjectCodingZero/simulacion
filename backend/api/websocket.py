@@ -2,6 +2,9 @@ from fastapi import APIRouter
 from fastapi import WebSocket, WebSocketDisconnect
 from log import logger
 
+# OBSOLETO: este router de WebSocket nativo no esta montado en main.py.
+# El frontend actual usa Socket.IO con path "/ws" y evento "simulationDashboard".
+# Se mantiene por referencia hasta decidir si se elimina o se migra.
 ws_router = APIRouter()
 
 @ws_router.websocket("api/ws/simulacion")

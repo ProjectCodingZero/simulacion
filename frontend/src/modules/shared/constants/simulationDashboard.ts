@@ -17,7 +17,6 @@ export const INITIAL_SIMULATION_DASHBOARD: SimulationDashboardPayload = {
     aluminum: { kg: 0, percentage: 0 },
     plastic: { kg: 0, percentage: 0 },
     other: { kg: 0, percentage: 0 },
-    losses: { kg: 0, percentage: 0 },
   },
   totals: {
     cableReceivedKg: 0,
