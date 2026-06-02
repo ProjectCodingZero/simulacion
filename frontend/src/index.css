@@ -350,23 +350,32 @@
   }
 
   .material-grid {
-    @apply grid grid-cols-5 gap-3;
+    @apply grid gap-3;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   }
 
   .material-card {
-    @apply grid min-h-[132px] content-center justify-items-center gap-2 rounded-lg border border-app-line bg-white px-3 py-4 shadow-app-soft;
+    @apply grid min-h-[148px] min-w-0 gap-2 rounded-lg border border-app-line bg-white p-3 shadow-app-soft;
+    grid-template-rows: 30px minmax(46px, 1fr) 34px;
+  }
+
+  .material-card-label,
+  .material-card-value,
+  .material-card-percent {
+    @apply flex min-w-0 items-center justify-center;
   }
 
   .material-card span {
-    @apply text-[13px] font-bold text-app-muted;
+    @apply block max-w-full text-center text-[13px] font-bold leading-tight text-app-muted;
   }
 
   .material-card strong {
-    @apply text-[22px] leading-tight;
+    @apply block max-w-full text-center text-[20px] leading-tight tabular-nums;
+    overflow-wrap: anywhere;
   }
 
   .material-card small {
-    @apply w-full rounded-[7px] p-[7px] text-center font-bold;
+    @apply block h-[34px] w-full rounded-[7px] p-[7px] text-center font-bold leading-[20px] tabular-nums;
   }
 
   .copper strong {

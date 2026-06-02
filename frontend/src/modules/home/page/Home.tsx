@@ -151,11 +151,17 @@ function Home() {
           <div className="material-grid">
             {MATERIALS.map(({ id, label, className }) => (
               <article className={`material-card ${className}`} key={id}>
-                <span>{label}</span>
-                <strong>{formatKg(dashboard.materials[id].kg)}</strong>
-                <small>
-                  {formatPercent(dashboard.materials[id].percentage)}
-                </small>
+                <div className="material-card-label">
+                  <span>{label}</span>
+                </div>
+                <div className="material-card-value">
+                  <strong>{formatKg(dashboard.materials[id].kg)}</strong>
+                </div>
+                <div className="material-card-percent">
+                  <small>
+                    {formatPercent(dashboard.materials[id].percentage)}
+                  </small>
+                </div>
               </article>
             ))}
           </div>
