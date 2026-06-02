@@ -18,7 +18,7 @@ def uniforme(min_v: float, max_v: float) -> float:
     return result
 
 
-def exponencial(alpha: float) -> Callable[[Num0_1], float]:
+def exponencial(alpha: float) -> float:
     """
         Probabilidad exponencial
         Args:
@@ -28,7 +28,9 @@ def exponencial(alpha: float) -> Callable[[Num0_1], float]:
             Callable[[float], int]: funcion la cual acepta un valor 'u' float [0,1] y devuelve un valor con la formula
             -1/alpha * log(u)
     """
-    return lambda u: -1 / alpha * log(u)
+    u = generador.mixto(1)[0]
+    return -1/alpha * log(u)
+
 
 def binomial(prob: list[Num0_1]) -> int:
     """

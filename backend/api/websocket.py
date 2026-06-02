@@ -1,31 +1,24 @@
-from fastapi import APIRouter
-from fastapi import WebSocket, WebSocketDisconnect
+import socketio
+from stadistic.rng import generador
 from log import logger
+sio = socketio.AsyncServer(async_mode="asgi", cors_allowed_origins="*")
+@sio.event
+async def connect(sid, environ):
+    logger.info(f"✅ Cliente conectado: {sid}")
 
-ws_router = APIRouter()
 
-@ws_router.websocket("api/ws/simulacion")
-async def websocket_endpoint(websocket: WebSocket):
-    # 1. Aceptamos la conexión del cliente
-    logger.info("Coneccion ha sido pedida")
-    await websocket.accept()
+@sio.event
+async def disconnect(sid):
+    logger.info(f"❌ Cliente desconectado: {sid}")
 
-    try:
-        while True:
-            # 2. Esperamos recibir un mensaje del cliente (ej: "iniciar")
-            data = await websocket.receive_text()
 
-            # 3. Lógica del simulador (aquí enviarías tus datos procesados)
-            if data == "iniciar":
-                for i in range(1, 6):
-                    # Simulamos un proceso que envía datos cada segundo
-                    await websocket.send_json({
-                        "paso": i,
-                        "mensaje": f"Procesando etapa {i}...",
-                        "estado": "activo"
-                    })
-                    import asyncio
-                    await asyncio.sleep(1)  # Simulación de tiempo real
+# Aquí atrapas el evento exacto que envíes desde React
+@sio.on("setSeed")
+async def manejar_simulacion(sid, data):
 
-    except WebSocketDisconnect:
-        print("El cliente se desconectó")
+    logger.info(f"📩 Mensaje de simulación recibido [{sid}]: {data['seed'], data['cable']}")
+    generador.seed = data['seed']
+    logger.info(f"semilla esteblecida: {generador.seed}")
+    # Responderle de vuelta al cliente
+    await sio.emit("respuestaServidor", f"Procesado con éxito: {data}", to=sid)
+
