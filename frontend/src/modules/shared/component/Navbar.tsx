@@ -1,4 +1,4 @@
-import { Gauge, LayoutDashboard, Recycle, Settings, Wifi } from "lucide-react";
+import { LayoutDashboard, Recycle, Settings, Wifi } from "lucide-react";
 import { NavLink } from "react-router-dom";
 
 function Navbar() {
@@ -54,18 +54,6 @@ function Navbar() {
           </li>
         </ul>
       </nav>
-
-      <section className="control-block">
-        <label>
-          <Gauge size={17} aria-hidden="true" />
-          Velocidad de simulacion
-        </label>
-        <div className="side-actions">
-          <button className="secondary compact" type="button">1x</button>
-          <button className="primary compact" type="button">2x</button>
-          <button className="secondary compact" type="button">3x</button>
-        </div>
-      </section>
     </aside>
   );
 }
