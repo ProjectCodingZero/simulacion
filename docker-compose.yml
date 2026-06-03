@@ -27,8 +27,8 @@ services:
     environment:
       API_URL: http://backend:${BACKEND_PORT:-8000}/api
       BACKEND_ORIGIN: http://backend:${BACKEND_PORT:-8000}
-    ports:
-      - "${FRONTEND_PORT:?FRONTEND_PORT must be set in the Docker Compose environment}:8080"
+    expose:
+      - "8080"
     restart: unless-stopped
     networks:
       - app-internal
