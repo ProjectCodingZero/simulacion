@@ -27,6 +27,7 @@ services:
     environment:
       API_URL: http://backend:${BACKEND_PORT:-8000}/api
       BACKEND_ORIGIN: http://backend:${BACKEND_PORT:-8000}
+      VITE_ALLOWED_HOSTS: ${VITE_ALLOWED_HOSTS:-utnfrt.bonar.tech}
     expose:
       - "8080"
     restart: unless-stopped

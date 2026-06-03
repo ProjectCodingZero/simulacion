@@ -8,6 +8,10 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
   const apiTarget = env.API_URL || "http://localhost:8000/api";
   const backendOrigin = env.BACKEND_ORIGIN || "http://localhost:8000";
+  const allowedHosts = (env.VITE_ALLOWED_HOSTS || "utnfrt.bonar.tech")
+    .split(",")
+    .map((host) => host.trim())
+    .filter(Boolean);
   const proxy = {
     "/api": {
       target: apiTarget,
@@ -32,6 +36,7 @@ export default defineConfig(({ mode }) => {
       proxy,
     },
     preview: {
+      allowedHosts,
       proxy,
     },
     plugins: [react(), tailwindcss()],

@@ -29,6 +29,7 @@ Variables principales:
 FRONTEND_PORT=8081
 BACKEND_PORT=8000
 BACKEND_DEBUG=false
+VITE_ALLOWED_HOSTS=utnfrt.bonar.tech
 ```
 
 Compose lee `.env` automaticamente para interpolar estos valores. Si no existe `.env`, se usan los defaults definidos en `docker-compose.yml`.
@@ -89,6 +90,7 @@ http://localhost:${FRONTEND_PORT}
 
 - El servicio `frontend` escucha internamente en `8080`.
 - El frontend usa el proxy de Vite para `/api` y `/ws`.
+- `VITE_ALLOWED_HOSTS` lista dominios permitidos por `vite preview`, separados por coma.
 - Frontend y backend comparten una unica red Docker normal para evitar ambiguedad de ruteo en Dokploy/Traefik.
 - No usar `docker-compose.local.yml` en Dokploy.
 - No publicar `backend:8000` salvo que haya una necesidad explicita.
