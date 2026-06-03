@@ -6,7 +6,7 @@ Este proyecto usa dos archivos de Compose:
 - `docker-compose.local.yml`: override local para publicar el frontend.
 
 - `frontend`: Vite levanta la app React dentro del contenedor.
-- `backend`: FastAPI/Uvicorn queda interno dentro de la red Docker.
+- `backend`: FastAPI/Uvicorn queda disponible solo dentro de la red Docker del compose.
 
 El frontend expone internamente `8080` y Vite proxya `/api` y `/ws` hacia `backend`. Dokploy debe publicar el servicio mediante su proxy, no mediante `ports` del compose.
 
@@ -89,6 +89,7 @@ http://localhost:${FRONTEND_PORT}
 
 - El servicio `frontend` escucha internamente en `8080`.
 - El frontend usa el proxy de Vite para `/api` y `/ws`.
+- Frontend y backend comparten una unica red Docker normal para evitar ambiguedad de ruteo en Dokploy/Traefik.
 - No usar `docker-compose.local.yml` en Dokploy.
 - No publicar `backend:8000` salvo que haya una necesidad explicita.
 - Mantener secretos reales fuera del repositorio; usar `.env` o el gestor de secretos de la plataforma.
