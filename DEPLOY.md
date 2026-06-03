@@ -5,7 +5,7 @@ Este proyecto corre con un unico `docker-compose.yml`:
 - `frontend`: Vite levanta la app React dentro del contenedor.
 - `backend`: FastAPI/Uvicorn queda interno dentro de la red Docker.
 
-No se publica el puerto del backend. El frontend publica HTTP en el host y Vite proxya `/api` y `/ws` hacia `backend`.
+El frontend publica HTTP en el host usando `FRONTEND_PORT` y Vite proxya `/api` y `/ws` hacia `backend`.
 
 ## Requisitos en la VPS
 
@@ -23,12 +23,13 @@ cp .env.example .env
 Variables principales:
 
 ```env
-FRONTEND_PORT=8080
+FRONTEND_PORT=8081
 BACKEND_PORT=8000
 BACKEND_DEBUG=false
 ```
 
 Compose lee `.env` automaticamente para interpolar estos valores. Si no existe `.env`, se usan los defaults definidos en `docker-compose.yml`.
+`FRONTEND_PORT` no tiene default en `docker-compose.yml`: debe estar seteado para evitar que un deploy termine ocupando `8080` por accidente.
 El backend siempre escucha en `0.0.0.0` dentro del contenedor; eso no es una variable de despliegue.
 
 ## Levantar
@@ -64,15 +65,16 @@ git pull
 docker compose up -d --build
 ```
 
-La app queda disponible en:
+La app queda disponible en el puerto publicado:
 
 ```text
-http://localhost:8080
+http://localhost:${FRONTEND_PORT}
 ```
 
 ## Notas
 
 - El servicio `frontend` escucha internamente en `8080`.
 - El frontend usa el proxy de Vite para `/api` y `/ws`.
+- En Dokploy, `FRONTEND_PORT` debe estar definido en las variables del despliegue Docker Compose, no solo como variable interna del contenedor.
 - No publicar `backend:8000` salvo que haya una necesidad explicita.
 - Mantener secretos reales fuera del repositorio; usar `.env` o el gestor de secretos de la plataforma.
