@@ -1,22 +1,15 @@
-FROM denoland/deno:2.5.6 AS builder
+FROM node:24-alpine
 
 WORKDIR /app
 
-COPY deno.json deno.lock ./
-RUN deno cache --lock=deno.lock --config=deno.json npm:vite@7.2.7
+COPY package*.json ./
+RUN npm ci
 
-COPY . .
-RUN deno task build
+COPY --chown=node:node . .
+RUN chown -R node:node /app
 
-FROM denoland/deno:2.5.6
-
-WORKDIR /app
-
-COPY --chown=deno:deno server.ts ./
-COPY --from=builder --chown=deno:deno /app/dist ./dist
-
-USER deno
+USER node
 
 EXPOSE 8080
 
-CMD ["deno", "run", "--allow-net=0.0.0.0:8080", "--allow-read=/app/dist", "server.ts"]
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0", "--port", "8080"]

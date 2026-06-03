@@ -11,8 +11,7 @@ services:
   frontend:
     build:
       context: ./frontend
-      target: builder
-    command: ["deno", "task", "dev", "--host", "0.0.0.0"]
+    command: ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
     ports: !override
       - "${FRONTEND_DEV_PORT:-5173}:5173"
     environment:

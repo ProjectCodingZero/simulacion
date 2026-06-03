@@ -1,12 +1,12 @@
 # Despliegue con Docker
 
-Este proyecto queda preparado para correr en una VPS con dos servicios:
+Este proyecto queda preparado para correr localmente con Docker con dos servicios:
 
-- `frontend`: Deno sirve la app Vite compilada dentro del contenedor.
+- `frontend`: Vite levanta la app React dentro del contenedor.
 - `backend`: FastAPI/Uvicorn queda interno dentro de la red Docker.
 
 En produccion no hace falta publicar el puerto `8000` del backend desde este compose.
-La configuracion de proxy o reverse proxy queda fuera de este compose. El servicio `frontend` queda disponible en la red Docker `app-entry` y escucha internamente en `8080`.
+El servicio `frontend` publica el puerto `8080` en el host y Vite proxya `/api` y `/ws` hacia el backend interno.
 
 ## Requisitos en la VPS
 
@@ -24,13 +24,14 @@ cp .env.example .env
 Variables principales:
 
 ```env
+FRONTEND_PORT=8080
 BACKEND_DEV_PORT=8000
 FRONTEND_DEV_PORT=5173
 ```
 
-Estas variables son para desarrollo con Docker Compose. Para ejecucion local sin Docker no son obligatorias: el backend usa `backend/.env` y el frontend, por defecto, proxya `/api` y `/ws` contra `http://localhost:8000`.
+`FRONTEND_PORT` aplica al compose base. Las variables `BACKEND_DEV_PORT` y `FRONTEND_DEV_PORT` son para el compose de desarrollo alternativo. Para ejecucion local sin Docker no son obligatorias: el backend usa `backend/.env` y el frontend, por defecto, proxya `/api` y `/ws` contra `http://localhost:8000`.
 
-## Produccion
+## Levantar con Docker
 
 Construir y levantar:
 
@@ -66,7 +67,7 @@ docker compose up -d --build
 La app queda disponible en:
 
 ```text
-frontend:8080 dentro de la red Docker de entrada del proyecto
+http://localhost:8080
 ```
 
 ## Desarrollo local con Docker
@@ -84,10 +85,9 @@ Backend:  http://localhost:8000
 
 En desarrollo con Docker, el frontend usa `API_URL=http://backend:8000/api` y `BACKEND_ORIGIN=http://backend:8000` dentro de la red Docker. En desarrollo sin Docker, esos valores pueden omitirse.
 
-## Notas para VPS
+## Notas
 
 - El servicio `frontend` escucha internamente en `8080`.
-- El servicio `frontend` esta conectado a `app-entry`, una red no interna pensada para que un proxy externo de la VPS pueda alcanzarlo.
-- La publicacion HTTP/HTTPS y las rutas de proxy para `/api` y `/ws` se configuran por fuera de este proyecto.
+- El frontend usa el proxy de Vite para `/api` y `/ws`.
 - No publicar `backend:8000` en produccion salvo que haya una necesidad explicita.
 - Mantener secretos reales fuera del repositorio; usar `.env` o el gestor de secretos de la plataforma.
