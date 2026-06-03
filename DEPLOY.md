@@ -1,12 +1,11 @@
-# Despliegue con Docker
+# Docker Compose
 
-Este proyecto queda preparado para correr localmente con Docker con dos servicios:
+Este proyecto corre con un unico `docker-compose.yml`:
 
 - `frontend`: Vite levanta la app React dentro del contenedor.
 - `backend`: FastAPI/Uvicorn queda interno dentro de la red Docker.
 
-En produccion no hace falta publicar el puerto `8000` del backend desde este compose.
-El servicio `frontend` publica el puerto `8080` en el host y Vite proxya `/api` y `/ws` hacia el backend interno.
+No se publica el puerto del backend. El frontend publica HTTP en el host y Vite proxya `/api` y `/ws` hacia `backend`.
 
 ## Requisitos en la VPS
 
@@ -25,13 +24,14 @@ Variables principales:
 
 ```env
 FRONTEND_PORT=8080
-BACKEND_DEV_PORT=8000
-FRONTEND_DEV_PORT=5173
+BACKEND_PORT=8000
+BACKEND_DEBUG=false
 ```
 
-`FRONTEND_PORT` aplica al compose base. Las variables `BACKEND_DEV_PORT` y `FRONTEND_DEV_PORT` son para el compose de desarrollo alternativo. Para ejecucion local sin Docker no son obligatorias: el backend usa `backend/.env` y el frontend, por defecto, proxya `/api` y `/ws` contra `http://localhost:8000`.
+Compose lee `.env` automaticamente para interpolar estos valores. Si no existe `.env`, se usan los defaults definidos en `docker-compose.yml`.
+El backend siempre escucha en `0.0.0.0` dentro del contenedor; eso no es una variable de despliegue.
 
-## Levantar con Docker
+## Levantar
 
 Construir y levantar:
 
@@ -70,24 +70,9 @@ La app queda disponible en:
 http://localhost:8080
 ```
 
-## Desarrollo local con Docker
-
-```bash
-docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build
-```
-
-URLs locales:
-
-```text
-Frontend: http://localhost:5173
-Backend:  http://localhost:8000
-```
-
-En desarrollo con Docker, el frontend usa `API_URL=http://backend:8000/api` y `BACKEND_ORIGIN=http://backend:8000` dentro de la red Docker. En desarrollo sin Docker, esos valores pueden omitirse.
-
 ## Notas
 
 - El servicio `frontend` escucha internamente en `8080`.
 - El frontend usa el proxy de Vite para `/api` y `/ws`.
-- No publicar `backend:8000` en produccion salvo que haya una necesidad explicita.
+- No publicar `backend:8000` salvo que haya una necesidad explicita.
 - Mantener secretos reales fuera del repositorio; usar `.env` o el gestor de secretos de la plataforma.

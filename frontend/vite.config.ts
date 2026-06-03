@@ -8,6 +8,18 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
   const apiTarget = env.API_URL || "http://localhost:8000/api";
   const backendOrigin = env.BACKEND_ORIGIN || "http://localhost:8000";
+  const proxy = {
+    "/api": {
+      target: apiTarget,
+      changeOrigin: true,
+      rewrite: (path: string) => path.replace(/^\/api/, ""),
+    },
+    "/ws": {
+      target: backendOrigin,
+      changeOrigin: true,
+      ws: true,
+    },
+  };
 
   return defineConfig({
     resolve: {
@@ -17,18 +29,10 @@ export default defineConfig(({ mode }) => {
       },
     },
     server: {
-      proxy: {
-        "/api": {
-          target: apiTarget,
-          changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api/, ""),
-        },
-        "/ws": {
-          target: backendOrigin,
-          changeOrigin: true,
-          ws: true,
-        },
-      },
+      proxy,
+    },
+    preview: {
+      proxy,
     },
     plugins: [react(), tailwindcss()],
     css: {
