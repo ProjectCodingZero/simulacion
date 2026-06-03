@@ -29,9 +29,9 @@ services:
     restart: unless-stopped
     networks:
       - app-internal
-      - public
+      - app-entry
 
 networks:
-  public:
+  app-entry:
   app-internal:
     internal: true

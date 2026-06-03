@@ -2,17 +2,16 @@
 
 Este proyecto queda preparado para correr en una VPS con dos servicios:
 
-- `frontend`: nginx sirve la app Vite compilada y publica el puerto HTTP.
+- `frontend`: Deno sirve la app Vite compilada dentro del contenedor.
 - `backend`: FastAPI/Uvicorn queda interno dentro de la red Docker.
 
-El frontend reenvia `/api` y `/ws` al backend, por lo que en produccion no hace falta publicar el puerto `8000`.
-En una VPS con Traefik/Dokploy, Traefik debe entrar al frontend por la red Docker usando el puerto interno `8080`; el proyecto no publica `80/443` ni un puerto HTTP propio del host.
+En produccion no hace falta publicar el puerto `8000` del backend desde este compose.
+La configuracion de proxy o reverse proxy queda fuera de este compose. El servicio `frontend` queda disponible en la red Docker `app-entry` y escucha internamente en `8080`.
 
 ## Requisitos en la VPS
 
 - Docker Engine
 - Docker Compose plugin
-- Reverse proxy frontal ya configurado, por ejemplo Traefik/Dokploy
 
 ## Configuracion
 
@@ -67,7 +66,7 @@ docker compose up -d --build
 La app queda disponible en:
 
 ```text
-https://DOMINIO_CONFIGURADO_EN_TRAEFIK/
+frontend:8080 dentro de la red Docker de entrada del proyecto
 ```
 
 ## Desarrollo local con Docker
@@ -87,7 +86,8 @@ En desarrollo con Docker, el frontend usa `API_URL=http://backend:8000/api` y `B
 
 ## Notas para VPS
 
-- Para HTTPS, usar Traefik/Dokploy delante del contenedor `frontend`.
-- El servicio `frontend` escucha internamente en `8080`; el reverse proxy debe apuntar a `http://NOMBRE_DEL_CONTENEDOR_FRONTEND:8080`.
+- El servicio `frontend` escucha internamente en `8080`.
+- El servicio `frontend` esta conectado a `app-entry`, una red no interna pensada para que un proxy externo de la VPS pueda alcanzarlo.
+- La publicacion HTTP/HTTPS y las rutas de proxy para `/api` y `/ws` se configuran por fuera de este proyecto.
 - No publicar `backend:8000` en produccion salvo que haya una necesidad explicita.
 - Mantener secretos reales fuera del repositorio; usar `.env` o el gestor de secretos de la plataforma.
