@@ -7,9 +7,6 @@ from application.simulation.statistics import pruebas
 import asyncio
 from math import sqrt
 
-# OBSOLETO/PENDIENTE DE REVISION: las funciones de generacion alternativas y
-# las pruebas asincronicas quedan como material historico del proyecto. La
-# simulacion actual solo usa generador.mixto()
 def parte_central_cuadrado(seed: int, num: int, total: int = 1) -> list[Num0_1]:
     """
     Metodo parte central del cuadrado.
@@ -148,10 +145,8 @@ class Congruencial(BaseModel):
     aditiva: int = 12_345
     mod: int = 2**31
     def __pruebas__(self, arr: list[Num0_1]) -> bool:
-        # OBSOLETO: se conserva para experimentos con generadores alternativos.
-        # No debe ejecutarse desde el handler async de Socket.IO.
         task_pruebas = [
-            pruebas.promedio(arr, 0.957),
+            pruebas.promedio(arr, 0.957), #int confi
             pruebas.frecuencia(arr, 2, 0.675),
             pruebas.serie(arr, 3, 0.957),
             pruebas.k_s(arr, 0.375),
@@ -161,7 +156,7 @@ class Congruencial(BaseModel):
             return True
         return False
 
-    def mixto(self, total: int = 1) -> list[Num0_1]:
+    def mixto(self, total: int = 1) -> list[Num0_1]: #e
         arr: list[Num0_1] = []
         self.__normalizar_parametros__()
         for _ in range(total):

@@ -212,6 +212,14 @@
     @apply text-xs font-extrabold uppercase tracking-[0.08em] text-app-blue;
   }
 
+  .error-message {
+    @apply inline-flex items-center gap-2 font-bold text-app-red;
+  }
+
+  .error-message svg {
+    @apply h-5 w-5 flex-none;
+  }
+
   .panel-heading {
     @apply mb-[18px];
   }

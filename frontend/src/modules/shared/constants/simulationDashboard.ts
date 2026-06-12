@@ -21,6 +21,7 @@ export const INITIAL_SIMULATION_DASHBOARD: SimulationDashboardPayload = {
   totals: {
     cableReceivedKg: 0,
     recoveredKg: 0,
+    recoveredNotMetallicKg: 0,
     lossesKg: 0,
     efficiencyPercentage: 0,
   },

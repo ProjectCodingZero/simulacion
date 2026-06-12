@@ -13,7 +13,7 @@ socket_app = socketio.ASGIApp(sio, other_asgi_app=app, socketio_path="")
 
 @sio.event
 async def connect(sid, environ):
-    logger.info(f"Cliente conectado: {sid}")
+    logger.info(f"Cliente conectado: {sid}") #CONEXION - DE WS
 
 
 @sio.event
@@ -21,7 +21,7 @@ async def disconnect(sid):
     logger.info(f"Cliente desconectado: {sid}")
 
 
-@sio.on("setSeed")
+@sio.on("setSeed") #ES
 async def manejar_simulacion(sid, data):
     await simulation_handler.handle_set_seed(sio, sid, data)
 

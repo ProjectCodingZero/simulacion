@@ -45,7 +45,7 @@ class StadisticService:
         self.lotes = []
         return self.run_id
 
-    def simular_lote(self, dia: int) -> dict:
+    def simular_lote(self, dia: int) -> dict: 
         lote = {
             "dia": dia,
             "nro_lote": dia,
@@ -55,14 +55,12 @@ class StadisticService:
         lote["contaminacion"] = self._seleccionar_contaminacion()
         lote["perdidas_porcentaje"] = max(normal(8, 2), 0) /100
         lote["estado_proceso"] = self._determinar_estado_proceso(
-            lote["tipo_cable"],
+            lote["tipo_cable"], #pass
             lote["contaminacion"],
         )
-        lote["estado_final"] = (
-            "Mantenimiento preventivo"
-            if lote["perdidas_porcentaje"] > 12
-            else "Continuar proceso"
-        )
+        if lote["perdidas_porcentaje"] > 12 : lote["estado_final"] = "Mantenimiento preventivo"
+        else : lote["estado_final"] = "Continuar proceso"
+        
 
         self._calcular_materiales(lote)
         self.lotes.append(lote)
@@ -76,6 +74,7 @@ class StadisticService:
         total_otros = sum(lote["otros_kg"] for lote in self.lotes)
         total_perdidas = sum(lote["perdidas_kg"] for lote in self.lotes)
         total_recuperado = total_cobre + total_aluminio
+        total_recuperado_no_metalicos = total_plastico + total_otros
 
         dashboard = {
             "runId": self.run_id,
@@ -92,6 +91,7 @@ class StadisticService:
             "totals": {
                 "cableReceivedKg": round(total_peso, 2),
                 "recoveredKg": round(total_recuperado, 2),
+                "recoveredNotMetallicKg": round(total_recuperado_no_metalicos, 2),
                 "lossesKg": round(total_perdidas, 2),
                 "efficiencyPercentage": self._percentage(total_recuperado, total_peso),
             },
@@ -190,7 +190,7 @@ class StadisticService:
         while not flag:
             arr = generador.mixto(10)
             flag = generador.__pruebas__(arr)
-            num = arr[0]
+            num = arr[0] #devuelve el primero de los10 cuando flag true
         return num
 
 

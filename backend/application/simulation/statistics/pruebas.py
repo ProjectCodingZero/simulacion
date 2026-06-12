@@ -81,3 +81,5 @@ def arriba_abajo_media(arr: list[Num0_1], confianza: float = 1.93) -> bool:
         estadistico_obtenido += (f_obtenido.get(i, 0) - f_esperada) ** 2 / f_esperada
 
     return estadistico_obtenido < confianza
+
+#generacion nros aleatorios <---< validacion

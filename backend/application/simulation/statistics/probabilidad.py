@@ -61,7 +61,7 @@ def normal(media: float, desvio: float) -> float:
     """
     flag: bool = False
     arr: list[float] = []
-    while not flag:
+    while not flag: #mientras sea false
         arr = generador.mixto(12)
         flag = generador.__pruebas__(arr)
     suma: float = sum(arr)

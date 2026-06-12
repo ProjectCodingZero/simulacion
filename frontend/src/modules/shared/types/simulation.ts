@@ -36,6 +36,7 @@ export interface SimulationMaterials {
 export interface SimulationTotals {
   cableReceivedKg: number;
   recoveredKg: number;
+  recoveredNotMetallicKg: number;
   lossesKg: number;
   efficiencyPercentage: number;
 }

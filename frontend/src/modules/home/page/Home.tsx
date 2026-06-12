@@ -1,4 +1,5 @@
 import {
+  CircleAlert,
   Cog,
   type LucideIcon,
   Magnet,
@@ -102,6 +103,7 @@ function formatNumber(value: number) {
 
 function Home() {
   const { dashboard } = useSocket();
+  const statusMessage = dashboard.message ?? statusText[dashboard.status];
 
   return (
     <div className="page-stack">
@@ -110,7 +112,14 @@ function Home() {
           <div className="section-title">
             <span className="section-kicker">Vista general</span>
             <h1>Resumen del proceso</h1>
-            <p>{dashboard.message ?? statusText[dashboard.status]}</p>
+            <p
+              className={dashboard.status === "error" ? "error-message" : ""}
+            >
+              {dashboard.status === "error" && (
+                <CircleAlert aria-hidden="true" strokeWidth={2.2} />
+              )}
+              <span>{statusMessage}</span>
+            </p>
           </div>
           <button
             className="secondary compact"
@@ -186,8 +195,12 @@ function Home() {
               <dd>{formatKg(dashboard.totals.cableReceivedKg)}</dd>
             </div>
             <div>
-              <dt>Material recuperado</dt>
+              <dt>Material recuperado metalico</dt>
               <dd>{formatKg(dashboard.totals.recoveredKg)}</dd>
+            </div>
+            <div>
+              <dt>Material recuperado no metalico</dt>
+              <dd>{formatKg(dashboard.totals.recoveredNotMetallicKg)}</dd>
             </div>
             <div>
               <dt>Perdidas totales</dt>
